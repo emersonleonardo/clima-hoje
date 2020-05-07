@@ -1,72 +1,89 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
+import Weather from './components/Weather';
+
 function App() {
   const [location, setLocation] = useState(false);
   const [weather, setWeather] = useState(false);
 
-  useEffect(()=> {
-    navigator.geolocation.getCurrentPosition((position)=> {
-      getWeather(position.coords.latitude, position.coords.longitude);
-      setLocation(true)
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(position => {
+      getPosition(position.coords.latitude, position.coords.longitude);
+      setLocation(true);
     })
   }, [])
 
-  let getWeather = async (lat, long) => {
-    let res = await axios.get("http://api.openweathermap.org/data/2.5/weather", {
+  let getPosition = async (lat, long) => {
+    await axios.get('http://api.openweathermap.org/data/2.5/weather', {
       params: {
         lat: lat,
         lon: long,
         appid: process.env.REACT_APP_OPEN_WHEATHER_KEY,
         lang: 'pt',
         units: 'metric'
-      }  
-    });
-    setWeather(res.data);
-    console.log(res.data)
+      }
+    })
+    .then(function (res){
+      setWeather(res.data);
+    })
   }
 
-  const dateBuilder = (d) => {
-    let months = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
-    let days = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
-
-    let day = days[d.getDay()];
-    let date = d.getDate();
-    let month = months[d.getMonth()];
-
-    return `${day} | ${date} ${month}`;
+  let getSearchValue = async (e) => {
+    if(e.key === 'Enter') {
+      await axios.get('http://api.openweathermap.org/data/2.5/weather', {
+        params: {
+          q: e.target.value,
+          appid: process.env.REACT_APP_OPEN_WHEATHER_KEY,
+          lang: 'pt',
+          units: 'metric'
+        }
+      })
+      .then(function(res){
+        setWeather(res.data);
+      })
+      .catch(function(error){
+        alert('Cidade não encontrada, tente novamente')
+      })
+    }    
   }
 
-  if(location === false){
+  let dt = new Date();
+  let time = dt.getHours();
+  if(hour => 6 && hour <= 18) {
+    time = 'app morning'
+  } else {
+    time = 'app night'
+  }
+
+  console.log(time)
+
+  if (location === false) {
     return (
-      <div className={`app`}>
+      <div className={time}>
         Você precisa habilitar a localização no browser o/
       </div>
     )
   } else if (weather === false) {
     return (
-      <div className={`app`}>
+      <div className={time}>
         Carregando o clima...
       </div>
     )
-  } else{
+  } else {
     return (
-      <div className={`app`}>
+      <div className={time}>
         <div className="background"></div>
         <main>
-          <div className="search-box">
+          <div className = "search-box">
             <input 
-              type="text"
-              className="search-bar"
-              placeholder="Ex.: São Paulo"
-            />
+              type = "text"
+              className = "search-bar"
+              placeholder = "Ex.: São Paulo"
+              onKeyPress = {getSearchValue}
+            />          
           </div>
-          <p className="temp">{ Math.round(weather['main']['temp']) }°</p>
-          <div className="footer">
-            <h3 className="location">{weather['name']}/{weather['sys']['country']}</h3>
-            <p className="today">{dateBuilder(new Date())}</p>
-            <p className="temp-min-max">{ Math.round(weather['main']['temp_min']) }° / { Math.round(weather['main']['temp_max']) }°</p>
-          </div>
+          <Weather weather = {weather}/>
         </main>
       </div>
     );
