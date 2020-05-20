@@ -50,13 +50,11 @@ function App() {
 
   let dt = new Date();
   let time = dt.getHours();
-  if(hour => 6 && hour <= 18) {
+  if(time > 6 && time < 18) {
     time = 'app morning'
   } else {
     time = 'app night'
   }
-
-  console.log(time)
 
   if (location === false) {
     return (

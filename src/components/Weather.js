@@ -15,17 +15,19 @@ export default function Weather(props) {
         city: props.weather.name,
         country: props.weather.sys.country,
         tempMax: Math.round(props.weather.main.temp_max),
-        tempMin: Math.round(props.weather.main.temp_min)
+        tempMin: Math.round(props.weather.main.temp_min),
+        // icon: "//openweathermap.org/themes/openweathermap/assets/vendor/owm/img/widgets/" + props.weather.weather[0].icon + ".png"
     }
 
     return(
-        <>
+        <React.StrictMode>
             <p className="temp">{weather.temp}°</p>
+            {/* <img src={weather.icon} alt=""/> */}
             <div className="footer">
                 <h3 className="location">{weather.city}/{weather.country}</h3>
                 <p className="today">{date.day} | {date.date} {date.month}</p>
                 <p className="temp-min-max">{weather.tempMin}° / {weather.tempMax}°</p>
             </div>
-        </>
+        </React.StrictMode>
     );
 }

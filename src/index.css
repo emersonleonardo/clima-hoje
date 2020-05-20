@@ -15,11 +15,10 @@ body {
   background-position: center center;
   background-size: cover;
   background-image: url(assets/Wallpaper_sunrise_min.jpg);
-  /* background: linear-gradient(180deg, rgba(3,0,57,1) 0%, rgba(0,0,0,1) 100%); */
 }
 
 .app.morning{
-  background: linear-gradient(180deg, rgba(3,0,57,1) 0%, rgba(0,0,0,1) 100%);
+  background-image: linear-gradient(120deg, #f6d365 0%, #fda085 100%);
 }
 .app.night{
   background: linear-gradient(180deg, rgba(3,0,57,1) 0%, rgba(0,0,0,1) 100%);
@@ -30,7 +29,7 @@ body {
   height: 100%;
   width: 100%;
   left: 0;
-  background: rgba(0, 0, 0, 0.72);
+  /* background: rgba(0, 0, 0, 0.72); */
 }
 
 .app main{
